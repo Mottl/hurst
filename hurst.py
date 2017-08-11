@@ -30,7 +30,7 @@ def get_RS(series):
 """
 	computeCH - compute c and H according to Hurst equiation
 """
-def compute_cH(series):
+def compute_Hc(series):
 	if len(series)<100:
 		raise ValueError("Series length must be greater or equal to 100")
 
@@ -59,5 +59,5 @@ if __name__ == '__main__':
 	for pct_change in series:
 		prices.append(prices[-1] * (1.+pct_change/100))
 
-	H, c = compute_cH(prices)
+	H, c = compute_Hc(prices)
 	print("H={}, c={}".format(H,c))
