@@ -9,8 +9,14 @@ H = 0.5 — random data.
 
 ### Usage
 ```python
+import matplotlib.pyplot as plt
 from hurst import compute_Hc
 
 price = [100.] * 100
-H, c = compute_Hc(price)
+H, c, data = compute_Hc(price)
+print("H={}, c={}".format(H, c))
+timeinterval = data[0]
+RS = data[1]
+
+plt.scatter(timeinterval, RS)
 ```
