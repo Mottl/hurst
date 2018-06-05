@@ -8,8 +8,9 @@ H = 0.5 — random data.
 0 < H < 0.5 — anti-persistent behavior.  
 
 ### Usage
+```python
+from hurst import compute_Hc
 
-    from hurst import compute_Hc
-
-    price = [100.] * 100
-    H, c = compute_Hc(price)
+price = [100.] * 100
+H, c = compute_Hc(price)
+```
