@@ -18,13 +18,11 @@ except:
     pass
 
 def _to_inc(x):
-    _x = x if type(x) == np.ndarray else np.array(x)
-    incs = _x[1:] - _x[:-1]
+    incs = x[1:] - x[:-1]
     return incs
 
 def _to_pct(x):
-    _x = x if type(x) == np.ndarray else np.array(x)
-    pcts = _x[1:] / _x[:-1] - 1.
+    pcts = x[1:] / x[:-1] - 1.
     return pcts
 
 def get_RS(series):
@@ -38,11 +36,10 @@ def get_RS(series):
         (Time-)series
     """
 
-
     incs = _to_inc(series)
+    R = max(series) - min(series) # range
+    S = np.std(incs)
 
-    R = max(series)-min(series) # range
-    S = np.std(incs) # standard deviation
     if R == 0 or S == 0:
         return 0  # return 0 to skip this interval due undefined R/S
     return R / S
@@ -83,7 +80,8 @@ def compute_Hc(series, min_window=10):
 
     if "pandas.core.series" in sys.modules.keys() and type(series) == pd.core.series.Series:
         if series.isnull().values.any():
-            raise ValueError("Series contains NaNs")    
+            raise ValueError("Series contains NaNs")
+        series = series.values  # convert pandas Series to numpy array
     elif np.isnan(np.min(series)):
         raise ValueError("Series contains NaNs")
 
@@ -114,10 +112,28 @@ def compute_Hc(series, min_window=10):
     return H, c, [window_sizes, RS]
 
 if __name__ == '__main__':
-    prices = [100.]
-    series = np.random.randn(99999)
-    for pct_change in series:
-        prices.append(prices[-1] * (1.+pct_change/100))
+    series = np.empty(shape=(99999,))  # create an empty array
+    series[0] = 0.  # initialize the first element with some value
+    for i in range(1,len(series)):
+        series[i] = series[i-1] + np.random.randn()
 
-    H, c, data = compute_Hc(np.array(prices))
+    """ Evaluate Hurst equation """
+    H, c, data = hurst.compute_Hc(series)
+
+    """ Plot """
+    # uncomment the following make a plot using Matplotlib:
+    """
+    import matplotlib.pyplot as plt
+
+    f, ax = plt.subplots()
+    ax.plot(data[0], c*data[0]**H, color="deepskyblue")
+    ax.scatter(data[0], data[1], color="purple")
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+    ax.set_xlabel('Time interval')
+    ax.set_ylabel('R/S ratio')
+    ax.grid(True)
+    plt.show()
+    """
+
     print("H={:.4f}, c={:.4f}".format(H,c))
