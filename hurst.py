@@ -11,6 +11,7 @@ __version__ = '0.0.2'
 
 import sys
 import math
+import warnings
 import numpy as np
 try:
     import pandas as pd
@@ -110,6 +111,42 @@ def compute_Hc(series, min_window=10):
 
     c = 10**c
     return H, c, [window_sizes, RS]
+
+def random_walk(length, proba=0.5, min_lookback=1, max_lookback=100):
+    """
+    Generates a random walk series
+
+    Parameters
+    ----------
+
+    proba : float, default 0.5
+        the probability that the next increment will follow the trend.
+        Set proba > 0.5 for the persistent random walk,
+        set proba < 0.5 for the antipersistent one
+
+    min_lookback: int, default 1
+    max_lookback: int, default 100
+        minimum and maximum window sizes to calculate trend direction
+    """
+
+    assert(min_lookback>=1)
+    assert(max_lookback>=min_lookback)
+
+    if max_lookback > length:
+        max_lookback = length
+        warnings.warn("max_lookback parameter has been set to the length of the random walk series.")
+
+    series = [0.] * length  # array of prices
+    for i in range(1, length):
+        if i < min_lookback + 1:
+            direction = np.sign(np.random.randn())
+        else:
+            lookback = np.random.randint(min_lookback, min(i-1, max_lookback)+1)
+            direction = np.sign(series[i-1] - series[i-1-lookback]) * np.sign(proba - np.random.uniform())
+
+        series[i] = series[i-1] + np.fabs(np.random.randn()) * direction
+
+    return series
 
 if __name__ == '__main__':
     series = np.empty(shape=(99999,))  # create an empty array

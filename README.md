@@ -12,19 +12,18 @@ H = 0.5 — random data.
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotplotlib.pyplot as plt
-from hurst import compute_Hc
+from hurst import compute_Hc, random_walk
 
-
-""" Generate random walk series """
+#  Use random_walk() function or generate random walk series manually:
 series = np.empty(shape=(99999,))  # create an empty array
 series[0] = 0.  # initialize the first element with some value
 for i in range(1,len(series)):
     series[i] = series[i-1] + np.random.randn()
 
-""" Evaluate Hurst equation """
+#  Evaluate Hurst equation
 H, c, data = hurst.compute_Hc(series)
 
-""" Plot """
+#  Plot
 f, ax = plt.subplots()
 ax.plot(data[0], c*data[0]**H, color="deepskyblue")
 ax.scatter(data[0], data[1], color="purple")
