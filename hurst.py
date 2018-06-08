@@ -39,7 +39,7 @@ def get_RS(series):
 
     incs = _to_inc(series)
     R = max(series) - min(series) # range
-    S = np.std(incs)
+    S = np.std(incs, ddof=1)
 
     if R == 0 or S == 0:
         return 0  # return 0 to skip this interval due undefined R/S
