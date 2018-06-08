@@ -3,8 +3,8 @@
 
 This is a small python-module for analysing __random walks__ and evaluating the __Hurst exponent (H)__.
 
-H = 0.5 — random data.  
-0.5 < H < 1.0 — persistent behavior.  
+H = 0.5 — Brownian motion,  
+0.5 < H < 1.0 — persistent behavior,  
 0 < H < 0.5 — anti-persistent behavior.  
 
 ### Usage
