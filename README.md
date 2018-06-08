@@ -37,6 +37,11 @@ plt.show()
 print("H={:.4f}, c={:.4f}".format(H,c))
 ```
 
+
+![R/S analysis](examples/regression.png?raw=true "R/S analysis")
+
+```H=0.4964, c=1.4877```
+
 ### Brownian motion, persistent and antipersistent random walks
 You can generate random walks with `random_walk()` function as following:
 
