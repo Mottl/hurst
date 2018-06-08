@@ -42,12 +42,18 @@ You can generate random walks with `random_walk()` function as following:
 
 #### Brownian ####
 ```brownian = random_walk(99999, proba=0.5)```
-![Brownian motion](examples/Brownian.png?raw=true "Brownian motion")
+
+
+![Brownian motion](examples/Brownian_motion.png?raw=true "Brownian motion")
 
 #### Persistent ####
 ```persistent = random_walk(99999, proba=0.7)```
+
+
 ![Persistent random walk](examples/Persistent.png?raw=true "Persistent random walk")
 
 #### Antipersistent ####
 ```antipersistent = random_walk(99999, proba=0.3)```
+
+
 ![Antipersistent random walk](examples/Antipersistent.png?raw=true "Antipersistent random walk")
