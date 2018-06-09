@@ -47,8 +47,9 @@ def get_RS(series):
 
 def get_original_RS(series):
     """
-    Get original (using range of cumulative sum of deviations instead of range of a series)
-    rescaled range from a time-series of values (i.e. stock prices)
+    Get original rescaled range (using the range of cumulative sum
+    of deviations instead of the range of a series) from a time-series
+    of values (i.e. stock prices)
 
     Parameters
     ----------
