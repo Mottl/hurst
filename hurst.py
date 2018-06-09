@@ -38,7 +38,32 @@ def get_RS(series):
     """
 
     incs = _to_inc(series)
-    R = max(series) - min(series) # range
+    R = max(series) - min(series)  # range
+    S = np.std(incs, ddof=1)
+
+    if R == 0 or S == 0:
+        return 0  # return 0 to skip this interval due undefined R/S
+    return R / S
+
+def get_original_RS(series):
+    """
+    Get original (using range of cumulative sum of deviations instead of range of a series)
+    rescaled range from a time-series of values (i.e. stock prices)
+
+    Parameters
+    ----------
+
+    series : array-like
+        (Time-)series
+    """
+
+    incs = _to_inc(series)
+
+    mean_inc = (series[-1] - series[0]) / len(incs)
+    deviations = incs - mean_inc
+
+    Z = np.cumsum(deviations)
+    R = max(Z) - min(Z)  # range
     S = np.std(incs, ddof=1)
 
     if R == 0 or S == 0:
@@ -148,16 +173,17 @@ def random_walk(length, proba=0.5, min_lookback=1, max_lookback=100):
 
     return series
 
-if __name__ == '__main__':
-    series = np.empty(shape=(99999,))  # create an empty array
-    series[0] = 0.  # initialize the first element with some value
-    for i in range(1,len(series)):
-        series[i] = series[i-1] + np.random.randn()
 
-    """ Evaluate Hurst equation """
+if __name__ == '__main__':
+
+    # Use random_walk() function or generate a random walk series manually:
+    random_increments = np.random.randn(99999)
+    series = np.cumsum(random_increments)  # create a random walk from random increments
+
+    # Evaluate Hurst equation
     H, c, data = hurst.compute_Hc(series)
 
-    """ Plot """
+    # Plot
     # uncomment the following make a plot using Matplotlib:
     """
     import matplotlib.pyplot as plt

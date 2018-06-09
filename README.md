@@ -14,11 +14,9 @@ import numpy as np
 import matplotplotlib.pyplot as plt
 from hurst import compute_Hc, random_walk
 
-#  Use random_walk() function or generate random walk series manually:
-series = np.empty(shape=(99999,))  # create an empty array
-series[0] = 0.  # initialize the first element with some value
-for i in range(1,len(series)):
-    series[i] = series[i-1] + np.random.randn()
+# Use random_walk() function or generate a random walk series manually:
+random_increments = np.random.randn(99999) 
+series = np.cumsum(random_increments)  # create a random walk from random increments
 
 #  Evaluate Hurst equation
 H, c, data = hurst.compute_Hc(series)
