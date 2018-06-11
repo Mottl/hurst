@@ -73,7 +73,7 @@ def get_original_RS(series):
 
 def compute_Hc(series, min_window=10):
     """
-    Compute H (Hurst exponent) and C according to Hurst equiation:
+    Compute H (Hurst exponent) and C according to Hurst equation:
     E(R/S) = c * T^H
 
     Refer to https://en.wikipedia.org/wiki/Hurst_exponent
@@ -89,7 +89,7 @@ def compute_Hc(series, min_window=10):
 
     Returns tuple of
         H, c and data
-        where H and c — parameters or Hurst equiation
+        where H and c — parameters or Hurst equation
         and data is a list of 2 lists: time intervals and R/S-values for correspoding time interval
         for further plotting log(data[0]) on X and log(data[1]) on Y
     """
@@ -185,7 +185,7 @@ if __name__ == '__main__':
     H, c, data = hurst.compute_Hc(series)
 
     # Plot
-    # uncomment the following make a plot using Matplotlib:
+    # uncomment the following to make a plot using Matplotlib:
     """
     import matplotlib.pyplot as plt
 
