@@ -178,11 +178,12 @@ def random_walk(length, proba=0.5, min_lookback=1, max_lookback=100):
 if __name__ == '__main__':
 
     # Use random_walk() function or generate a random walk series manually:
+    np.random.seed(42)
     random_increments = np.random.randn(99999)
     series = np.cumsum(random_increments)  # create a random walk from random increments
 
     # Evaluate Hurst equation
-    H, c, data = hurst.compute_Hc(series)
+    H, c, data = compute_Hc(series)
 
     # Plot
     # uncomment the following to make a plot using Matplotlib:
@@ -201,3 +202,5 @@ if __name__ == '__main__':
     """
 
     print("H={:.4f}, c={:.4f}".format(H,c))
+    assert H<0.6 and H>0.4
+
