@@ -1,6 +1,8 @@
 # hurst
 ## Hurst exponent evaluation and R/S-analysis
 
+[![Build Status](https://travis-ci.org/Mottl/hurst.svg?branch=master)](https://travis-ci.org/Mottl/hurst)
+
 **hurst** is a small Python module for analysing __random walks__ and evaluating the __Hurst exponent (H)__.
 
 H = 0.5 — Brownian motion,  
