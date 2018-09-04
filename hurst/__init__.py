@@ -7,7 +7,8 @@ https://en.wikipedia.org/wiki/Hurst_exponent
 https://en.wikipedia.org/wiki/Rescaled_range
 """
 
-__version__ = '0.0.2'
+name = "hurst"
+__version__ = '0.0.3'
 
 import sys
 import math

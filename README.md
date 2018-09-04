@@ -1,6 +1,7 @@
 # hurst
 ## Hurst exponent evaluation and R/S-analysis
 
+[![pypi](https://img.shields.io/pypi/v/hurst.svg)](https://pypi.org/project/hurst/)
 ![Python 2.7](https://img.shields.io/badge/python-2.7-blue.svg)
 ![Python 3x](https://img.shields.io/badge/python-3.x-blue.svg)
 [![Build Status](https://travis-ci.org/Mottl/hurst.svg?branch=master)](https://travis-ci.org/Mottl/hurst)
@@ -12,6 +13,17 @@ H = 0.5 — Brownian motion,
 0 < H < 0.5 — anti-persistent behavior.  
 
 ## Usage
+Install **hurst** module with  
+```bash
+pip install hurst
+```
+
+or  
+
+```bash
+pip install -e https://github.com/Mottl/hurst
+```
+
 ```python
 import matplotlib.pyplot as plt
 import numpy as np
@@ -42,7 +54,7 @@ print("H={:.4f}, c={:.4f}".format(H,c))
 ```
 
 
-![R/S analysis](examples/regression.png?raw=true "R/S analysis")
+![R/S analysis](https://github.com/Mottl/hurst/raw/master/examples/regression.png?raw=true "R/S analysis")
 
 ```H=0.4964, c=1.4877```
 
@@ -53,16 +65,16 @@ You can generate random walks with `random_walk()` function as following:
 ```brownian = random_walk(99999, proba=0.5)```
 
 
-![Brownian motion](examples/Brownian_motion.png?raw=true "Brownian motion")
+![Brownian motion](https://github.com/Mottl/hurst/raw/master/examples/Brownian_motion.png?raw=true "Brownian motion")
 
 ### Persistent
 ```persistent = random_walk(99999, proba=0.7)```
 
 
-![Persistent random walk](examples/Persistent.png?raw=true "Persistent random walk")
+![Persistent random walk](https://github.com/Mottl/hurst/raw/master/examples/Persistent.png?raw=true "Persistent random walk")
 
 ### Antipersistent
 ```antipersistent = random_walk(99999, proba=0.3)```
 
 
-![Antipersistent random walk](examples/Antipersistent.png?raw=true "Antipersistent random walk")
+![Antipersistent random walk](https://github.com/Mottl/hurst/raw/master/examples/Antipersistent.png?raw=true "Antipersistent random walk")

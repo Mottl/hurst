@@ -1,1 +1,25 @@
+*.swp
+*.tmp
+*.bak
+*.vim
+*~
+
+################
+# Python files #
+################
 __pycache__
+.pytest_cache
+
+# setup.py working directory
+build
+
+# sphinx build directory
+_build
+
+# setup.py dist directory
+dist
+doc/build
+doc/cdoc/build
+
+# Egg metadata
+*.egg-info
