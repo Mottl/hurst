@@ -18,17 +18,50 @@ try:
 except:
     pass
 
-def _to_inc(x):
+def __to_inc(x):
     incs = x[1:] - x[:-1]
     return incs
 
-def _to_pct(x):
+def __to_pct(x):
     pcts = x[1:] / x[:-1] - 1.
     return pcts
 
-def get_RS(series):
+def __get_simplified_RS(series, kind):
     """
-    Get rescaled range from time-series of values (i.e. stock prices)
+    Simplified version of rescaled range
+
+    Parameters
+    ----------
+
+    series : array-like
+        (Time-)series
+    kind : str (refer to compute_Hc)
+    """
+
+    if kind == 'random_walk':
+        incs = __to_inc(series)
+        R = max(series) - min(series)  # range in absolute values
+        S = np.std(incs, ddof=1)
+    elif kind == 'price':
+        pcts = __to_pct(series)
+        R = max(series) / min(series) - 1. # range in percent
+        S = np.std(pcts, ddof=1)
+    elif kind == 'change':
+        incs = series
+        _series = np.hstack([[0.],np.cumsum(incs)])
+        R = max(_series) - min(_series)  # range in absolute values
+        S = np.std(incs, ddof=1)
+
+    if R == 0 or S == 0:
+        return 0  # return 0 to skip this interval due the undefined R/S ratio
+
+    return R / S
+
+def __get_RS(series, kind):
+    """
+    Get rescaled range (using the range of cumulative sum
+    of deviations instead of the range of a series as in the simplified version
+    of R/S) from a time-series of values.
 
     Parameters
     ----------
@@ -37,46 +70,45 @@ def get_RS(series):
         (Time-)series
     """
 
-    incs = _to_inc(series)
-    R = max(series) - min(series)  # range
-    S = np.std(incs, ddof=1)
+    if kind == 'random_walk':
+        incs = __to_inc(series)
+        mean_inc = (series[-1] - series[0]) / len(incs)
+        deviations = incs - mean_inc
+        Z = np.cumsum(deviations)
+        R = max(Z) - min(Z)
+        S = np.std(incs, ddof=1)
+    elif kind == 'price':
+        incs = __to_pct(series)
+        # convert price to percentt changes to price:
+        _series = np.hstack([[0.],np.cumsum(incs)])
+        mean_inc = (_series[-1] - _series[0]) / len(incs)
+        deviations = incs - mean_inc
+        Z = np.cumsum(deviations)
+        R = max(Z) - min(Z)
+        S = np.std(incs, ddof=1)
+    elif kind == 'change':
+        incs = series
+        _series = np.hstack([[0.],np.cumsum(incs)])
+        mean_inc = (series[-1] - series[0]) / len(incs)
+        deviations = incs - mean_inc
+        Z = np.cumsum(deviations)
+        R = max(Z) - min(Z)
+        S = np.std(incs, ddof=1)
 
     if R == 0 or S == 0:
         return 0  # return 0 to skip this interval due undefined R/S
+
     return R / S
 
-def get_original_RS(series):
-    """
-    Get original rescaled range (using the range of cumulative sum
-    of deviations instead of the range of a series) from a time-series
-    of values (i.e. stock prices)
-
-    Parameters
-    ----------
-
-    series : array-like
-        (Time-)series
-    """
-
-    incs = _to_inc(series)
-
-    mean_inc = (series[-1] - series[0]) / len(incs)
-    deviations = incs - mean_inc
-
-    Z = np.cumsum(deviations)
-    R = max(Z) - min(Z)  # range
-    S = np.std(incs, ddof=1)
-
-    if R == 0 or S == 0:
-        return 0  # return 0 to skip this interval due undefined R/S
-    return R / S
-
-def compute_Hc(series, min_window=10):
+def compute_Hc(series, kind="random_walk", min_window=10, simplified=True):
     """
     Compute H (Hurst exponent) and C according to Hurst equation:
     E(R/S) = c * T^H
 
-    Refer to https://en.wikipedia.org/wiki/Hurst_exponent
+    Refer to:
+    https://en.wikipedia.org/wiki/Hurst_exponent
+    https://en.wikipedia.org/wiki/Rescaled_range
+    https://en.wikipedia.org/wiki/Random_walk
 
     Parameters
     ----------
@@ -84,8 +116,19 @@ def compute_Hc(series, min_window=10):
     series : array-like
         (Time-)series
 
+    kind : str
+        Kind of series
+        possible values 'random_walk', 'change':
+        - 'random_walk' means that a series is a random walk with random increments;
+        - 'price' means that a series is a random walk with random multipliers;
+        - 'change' means that a series consists of random increments
+            (thus produced random walk is a cumulative sum of increments);
+
     min_window : int, default 10
         the minimal window size for R/S calculation
+
+    simplified : bool, default True
+        whether to use the simplified or the original version of R/S calculation
 
     Returns tuple of
         H, c and data
@@ -112,6 +155,12 @@ def compute_Hc(series, min_window=10):
     elif np.isnan(np.min(series)):
         raise ValueError("Series contains NaNs")
 
+    if simplified:
+        RS_func = __get_simplified_RS
+    else:
+        RS_func = __get_RS
+
+
     err = np.geterr()
     np.seterr(all='raise')
 
@@ -126,7 +175,7 @@ def compute_Hc(series, min_window=10):
         for start in range(0, len(series), w):
             if (start+w)>len(series):
                 break
-            _ = get_RS(series[start:start+w])
+            _ = RS_func(series[start:start+w], kind)
             if _ != 0:
                 rs.append(_)
         RS.append(np.mean(rs))
@@ -138,7 +187,7 @@ def compute_Hc(series, min_window=10):
     c = 10**c
     return H, c, [window_sizes, RS]
 
-def random_walk(length, proba=0.5, min_lookback=1, max_lookback=100):
+def random_walk(length, proba=0.5, min_lookback=1, max_lookback=100, cumprod=False):
     """
     Generates a random walk series
 
@@ -153,6 +202,8 @@ def random_walk(length, proba=0.5, min_lookback=1, max_lookback=100):
     min_lookback: int, default 1
     max_lookback: int, default 100
         minimum and maximum window sizes to calculate trend direction
+    cumprod : bool, default False
+        generate a random walk as a cumulative product instead of cumulative sum
     """
 
     assert(min_lookback>=1)
@@ -162,15 +213,24 @@ def random_walk(length, proba=0.5, min_lookback=1, max_lookback=100):
         max_lookback = length
         warnings.warn("max_lookback parameter has been set to the length of the random walk series.")
 
-    series = [0.] * length  # array of prices
-    for i in range(1, length):
-        if i < min_lookback + 1:
-            direction = np.sign(np.random.randn())
-        else:
-            lookback = np.random.randint(min_lookback, min(i-1, max_lookback)+1)
-            direction = np.sign(series[i-1] - series[i-1-lookback]) * np.sign(proba - np.random.uniform())
-
-        series[i] = series[i-1] + np.fabs(np.random.randn()) * direction
+    if not cumprod:  # ordinary increments
+        series = [0.] * length  # array of prices
+        for i in range(1, length):
+            if i < min_lookback + 1:
+                direction = np.sign(np.random.randn())
+            else:
+                lookback = np.random.randint(min_lookback, min(i-1, max_lookback)+1)
+                direction = np.sign(series[i-1] - series[i-1-lookback]) * np.sign(proba - np.random.uniform())
+            series[i] = series[i-1] + np.fabs(np.random.randn()) * direction
+    else:  # percent changes
+        series = [1.] * length  # array of prices
+        for i in range(1, length):
+            if i < min_lookback + 1:
+                direction = np.sign(np.random.randn())
+            else:
+                lookback = np.random.randint(min_lookback, min(i-1, max_lookback)+1)
+                direction = np.sign(series[i-1] / series[i-1-lookback] - 1.) * np.sign(proba - np.random.uniform())
+            series[i] = series[i-1] * np.fabs(1 + np.random.randn()/1000. * direction)
 
     return series
 
@@ -178,12 +238,13 @@ def random_walk(length, proba=0.5, min_lookback=1, max_lookback=100):
 if __name__ == '__main__':
 
     # Use random_walk() function or generate a random walk series manually:
+    # series = random_walk(99999, cumprod=True)
     np.random.seed(42)
-    random_increments = np.random.randn(99999)
-    series = np.cumsum(random_increments)  # create a random walk from random increments
+    random_changes = 1. + np.random.randn(99999) / 1000.
+    series = np.cumprod(random_changes)  # create a random walk from random changes
 
     # Evaluate Hurst equation
-    H, c, data = compute_Hc(series)
+    H, c, data = compute_Hc(series, kind='price', simplified=True)
 
     # Plot
     # uncomment the following to make a plot using Matplotlib:

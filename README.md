@@ -19,11 +19,13 @@ import matplotplotlib.pyplot as plt
 from hurst import compute_Hc, random_walk
 
 # Use random_walk() function or generate a random walk series manually:
-random_increments = np.random.randn(99999) 
-series = np.cumsum(random_increments)  # create a random walk from random increments
+# series = random_walk(99999, cumprod=True)
+np.random.seed(42)
+random_changes = 1. + np.random.randn(99999) / 1000.
+series = np.cumprod(random_changes)  # create a random walk from random changes
 
 # Evaluate Hurst equation
-H, c, data = hurst.compute_Hc(series)
+H, c, data = compute_Hc(series, kind='price', simplified=True)
 
 # Plot
 f, ax = plt.subplots()
