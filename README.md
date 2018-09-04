@@ -12,7 +12,7 @@ H = 0.5 — Brownian motion,
 0.5 < H < 1.0 — persistent behavior,  
 0 < H < 0.5 — anti-persistent behavior.  
 
-## Usage
+## Installation
 Install **hurst** module with  
 ```bash
 pip install hurst
@@ -23,7 +23,7 @@ or
 ```bash
 pip install -e https://github.com/Mottl/hurst
 ```
-
+## Usage
 ```python
 import matplotlib.pyplot as plt
 import numpy as np
