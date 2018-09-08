@@ -101,7 +101,7 @@ def __get_RS(series, kind):
 
     return R / S
 
-def compute_Hc(series, kind="random_walk", min_window=10, simplified=True):
+def compute_Hc(series, kind="random_walk", min_window=10, max_window=None, simplified=True):
     """
     Compute H (Hurst exponent) and C according to Hurst equation:
     E(R/S) = c * T^H
@@ -127,6 +127,9 @@ def compute_Hc(series, kind="random_walk", min_window=10, simplified=True):
 
     min_window : int, default 10
         the minimal window size for R/S calculation
+
+    max_window : int, default is the length of series minus 1
+        the maximal window size for R/S calculation
 
     simplified : bool, default True
         whether to use the simplified or the original version of R/S calculation
@@ -165,9 +168,10 @@ def compute_Hc(series, kind="random_walk", min_window=10, simplified=True):
     err = np.geterr()
     np.seterr(all='raise')
 
+    max_window = max_window or len(series)-1
     window_sizes = list(map(
         lambda x: int(10**x),
-        np.arange(math.log10(min_window), math.log10(len(series)-1), 0.25)))
+        np.arange(math.log10(min_window), math.log10(max_window), 0.25)))
     window_sizes.append(len(series))
 
     RS = []
