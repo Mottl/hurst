@@ -14,15 +14,10 @@ H = 0.5 — Brownian motion,
 
 ## Installation
 Install **hurst** module with  
-```bash
-pip install hurst
-```
+`pip install hurst`  
+or    
+`pip install -e git+https://github.com/Mottl/hurst#egg=hurst`
 
-or  
-
-```bash
-pip install -e https://github.com/Mottl/hurst
-```
 ## Usage
 ```python
 import matplotlib.pyplot as plt
