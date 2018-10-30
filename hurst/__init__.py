@@ -37,7 +37,7 @@ def __get_simplified_RS(series, kind):
     series : array-like
         (Time-)series
     kind : str
-        The kind of series (refer to computeHc docstring)
+        The kind of series (refer to compute_Hc docstring)
     """
 
     if kind == 'random_walk':
@@ -71,7 +71,7 @@ def __get_RS(series, kind):
     series : array-like
         (Time-)series
     kind : str
-        The kind of series (refer to computeHc docstring)
+        The kind of series (refer to compute_Hc docstring)
     """
 
     if kind == 'random_walk':
