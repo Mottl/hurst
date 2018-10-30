@@ -48,10 +48,15 @@ plt.show()
 print("H={:.4f}, c={:.4f}".format(H,c))
 ```
 
-
 ![R/S analysis](https://github.com/Mottl/hurst/raw/master/examples/regression.png?raw=true "R/S analysis")
 
 ```H=0.4964, c=1.4877```
+
+### Kinds of series
+The `kind` parameter of the `compute_Hc` function can have the following values:  
+`'change'`: a series is just random values (i.e. `np.random.randn(...)`)  
+`'random_walk'`: a series is a cumulative sum of changes (i.e. `np.cumsum(np.random.randn(...))`)  
+`'price'`: a series is a cumulative product of changes (i.e. `np.cumprod(1+epsilon*np.random.randn(...)`)
 
 ## Brownian motion, persistent and antipersistent random walks
 You can generate random walks with `random_walk()` function as following:
