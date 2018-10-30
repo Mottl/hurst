@@ -36,7 +36,8 @@ def __get_simplified_RS(series, kind):
 
     series : array-like
         (Time-)series
-    kind : str (refer to compute_Hc)
+    kind : str
+        The kind of series (refer to computeHc docstring)
     """
 
     if kind == 'random_walk':
@@ -69,6 +70,8 @@ def __get_RS(series, kind):
 
     series : array-like
         (Time-)series
+    kind : str
+        The kind of series (refer to computeHc docstring)
     """
 
     if kind == 'random_walk':
@@ -78,6 +81,7 @@ def __get_RS(series, kind):
         Z = np.cumsum(deviations)
         R = max(Z) - min(Z)
         S = np.std(incs, ddof=1)
+
     elif kind == 'price':
         incs = __to_pct(series)
         # convert price to percentt changes to price:
@@ -87,6 +91,7 @@ def __get_RS(series, kind):
         Z = np.cumsum(deviations)
         R = max(Z) - min(Z)
         S = np.std(incs, ddof=1)
+
     elif kind == 'change':
         incs = series
         _series = np.hstack([[0.],np.cumsum(incs)])
@@ -119,7 +124,7 @@ def compute_Hc(series, kind="random_walk", min_window=10, max_window=None, simpl
 
     kind : str
         Kind of series
-        possible values 'random_walk', 'change':
+        possible values are 'random_walk', 'change' and 'price':
         - 'random_walk' means that a series is a random walk with random increments;
         - 'price' means that a series is a random walk with random multipliers;
         - 'change' means that a series consists of random increments
