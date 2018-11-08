@@ -20,9 +20,8 @@ or
 
 ## Usage
 ```python
-import matplotlib.pyplot as plt
 import numpy as np
-import matplotplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 from hurst import compute_Hc, random_walk
 
 # Use random_walk() function or generate a random walk series manually:

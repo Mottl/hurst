@@ -84,9 +84,7 @@ def __get_RS(series, kind):
 
     elif kind == 'price':
         incs = __to_pct(series)
-        # convert price to percentt changes to price:
-        _series = np.hstack([[0.],np.cumsum(incs)])
-        mean_inc = (_series[-1] - _series[0]) / len(incs)
+        mean_inc = np.sum(incs) / len(incs)
         deviations = incs - mean_inc
         Z = np.cumsum(deviations)
         R = max(Z) - min(Z)
@@ -94,8 +92,7 @@ def __get_RS(series, kind):
 
     elif kind == 'change':
         incs = series
-        _series = np.hstack([[0.],np.cumsum(incs)])
-        mean_inc = (series[-1] - series[0]) / len(incs)
+        mean_inc = np.sum(incs) / len(incs)
         deviations = incs - mean_inc
         Z = np.cumsum(deviations)
         R = max(Z) - min(Z)
