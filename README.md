@@ -1,10 +1,11 @@
 # hurst
 ## Hurst exponent evaluation and R/S-analysis
 
-[![pypi](https://img.shields.io/pypi/v/hurst.svg)](https://pypi.org/project/hurst/)
 ![Python 2.7](https://img.shields.io/badge/python-2.7-blue.svg)
 ![Python 3x](https://img.shields.io/badge/python-3.x-blue.svg)
 [![Build Status](https://travis-ci.org/Mottl/hurst.svg?branch=master)](https://travis-ci.org/Mottl/hurst)
+[![pypi](https://img.shields.io/pypi/v/hurst.svg)](https://pypi.org/project/hurst/)
+[![Downloads](https://pepy.tech/badge/hurst)](https://pepy.tech/project/hurst)
 
 **hurst** is a small Python module for analysing __random walks__ and evaluating the __Hurst exponent (H)__.
 
