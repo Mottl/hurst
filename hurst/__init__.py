@@ -8,7 +8,7 @@ https://en.wikipedia.org/wiki/Rescaled_range
 """
 
 name = "hurst"
-__version__ = '0.0.3'
+__version__ = '0.0.5'
 
 import sys
 import math
