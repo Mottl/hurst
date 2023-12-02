@@ -103,7 +103,7 @@ def __get_RS(series, kind):
 
     return R / S
 
-def compute_Hc(series, kind="random_walk", min_window=10, max_window=None, simplified=True):
+def compute_Hc(series, kind="random_walk", min_window=10, max_window=None, simplified=True, min_sample=100):
     """
     Compute H (Hurst exponent) and C according to Hurst equation:
     E(R/S) = c * T^H
@@ -143,8 +143,8 @@ def compute_Hc(series, kind="random_walk", min_window=10, max_window=None, simpl
         for further plotting log(data[0]) on X and log(data[1]) on Y
     """
 
-    if len(series)<100:
-        raise ValueError("Series length must be greater or equal to 100")
+    if len(series)<min_sample:
+        raise ValueError(f"Series length must be greater or equal to min_sample={min_sample}" )
 
     ndarray_likes = [np.ndarray]
     if "pandas.core.series" in sys.modules.keys():
